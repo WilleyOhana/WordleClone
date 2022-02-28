@@ -1,0 +1,38 @@
+.Board {
+
+}
+
+.Board .row {
+    display: flex;
+    margin: 12px 0px;
+}
+
+.Board .row .char {
+    height: 60px;
+    aspect-ratio: 1;
+    margin: 0px 2.5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    background-color: rgb(40,40,40);
+    border: 2px solid rgb(10,10,10);
+    border-radius: 2px;
+    font-size: 40px;
+    font-family: sans-serif;
+    text-transform: capitalize;
+    transition: 0.02s ease-in-out;
+}
+
+.Board .row .char.active {
+    transform: scale(1.05);
+    background-color: rgb(55,55,55);
+}
+
+.Board .row .char.proper {
+    background-color: green;
+}
+
+.Board .row .char.correct {
+    background-color: yellow;
+}
