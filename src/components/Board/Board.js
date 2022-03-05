@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import './Board.css';
 
-function Board({ possibleWords, word, hasWon, setHasWon, setHasLost }) {
+function Board({ possibleWords, word, hasWon, setHasWon, hasLost, setHasLost, setSeenLetters, setWinCount, setLossCount, setRestart }) {
     const [currCharIndex, setCurrCharIndex] = useState(0);
     const [currGuessIndex, setCurrGuessIndex] = useState(0);
     const [guesses, setGuesses] = useState([[{val: '', active: 'active', isCorrect: '', isProper: ''},{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active:''}],
@@ -11,10 +11,85 @@ function Board({ possibleWords, word, hasWon, setHasWon, setHasLost }) {
                                             [{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active:''}],
                                             [{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active:''}]
                                         ]);
+    const [submitted, setSubmitted] = useState(true);
     
-
-                                     
+    // useEffect to watch for updates to guesses state and update seenLetters in App.js
     useEffect(() => {
+        setSeenLetters((prevSeenLetters) => {
+
+            // The ugliest way ever to deep copy a JS object :(
+            let newSeenLetters = JSON.parse(JSON.stringify(prevSeenLetters));
+            
+            /* Loop through each value in guess state. If the character is proper 
+            or correct or incorrect, update the seenLetters state in App.js */
+            guesses.forEach(guess => {
+                guess.forEach(guessChar => {
+                    if(guessChar.isProper === "proper") {
+                        newSeenLetters[guessChar.val] = {...newSeenLetters[guessChar.val], proper: 'proper'};
+                    } else if (guessChar.isCorrect === "correct") {
+                        newSeenLetters[guessChar.val] = {...newSeenLetters[guessChar.val], correct: 'correct'};
+                    } else if (guessChar.isCorrect === "" && guessChar.isProper === "") {
+                        newSeenLetters[guessChar.val] = {...newSeenLetters[guessChar.val], incorrect: 'incorrect'};
+                    }
+                })
+            })
+            
+            return newSeenLetters;
+        })
+
+        
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [submitted, setSeenLetters]);
+
+    // useEffect to set up event listeners for letter keys, backspace key, and enter key
+    useEffect(() => {
+        /* Helper function for handleEnterPress
+        Restart the game with updated Win / Loss counters */
+        const restartGame = () => {
+            setRestart(prev => !prev);
+            setCurrCharIndex(0);
+            setCurrGuessIndex(0);
+            setGuesses(([[{val: '', active: 'active', isCorrect: '', isProper: ''},{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active:''}],
+            [{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active:''}],
+            [{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active:''}],
+            [{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active:''}],
+            [{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active:''}],
+            [{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active:''}]
+        ]))
+            if(hasWon) setWinCount(prev => prev += 1);
+            if(hasLost) setLossCount(prev => prev += 1);
+            setHasWon(false);
+            setHasLost(false);
+            setSeenLetters({
+                q: { correct: '', proper: '', incorrect: '' },
+                w: { correct: '', proper: '', incorrect: '' },
+                e: { correct: '', proper: '', incorrect: '' },
+                r: { correct: '', proper: '', incorrect: '' },
+                t: { correct: '', proper: '', incorrect: '' },
+                y: { correct: '', proper: '', incorrect: '' },
+                u: { correct: '', proper: '', incorrect: '' },
+                i: { correct: '', proper: '', incorrect: '' },
+                o: { correct: '', proper: '', incorrect: '' },
+                p: { correct: '', proper: '', incorrect: '' },
+                a: { correct: '', proper: '', incorrect: '' },
+                s: { correct: '', proper: '', incorrect: '' },
+                d: { correct: '', proper: '', incorrect: '' },
+                f: { correct: '', proper: '', incorrect: '' },
+                g: { correct: '', proper: '', incorrect: '' },
+                h: { correct: '', proper: '', incorrect: '' },
+                j: { correct: '', proper: '', incorrect: '' },
+                k: { correct: '', proper: '', incorrect: '' },
+                l: { correct: '', proper: '', incorrect: '' },
+                z: { correct: '', proper: '', incorrect: '' },
+                x: { correct: '', proper: '', incorrect: '' },
+                c: { correct: '', proper: '', incorrect: '' },
+                v: { correct: '', proper: '', incorrect: '' },
+                b: { correct: '', proper: '', incorrect: '' },
+                n: { correct: '', proper: '', incorrect: '' },
+                m: { correct: '', proper: '', incorrect: '' }
+              });
+        }
+
         /* Helper function for handleEnterPress
         Return true if guess is 5 characters and in the possibleWords array */
         const validateGuess = () => {
@@ -54,8 +129,12 @@ function Board({ possibleWords, word, hasWon, setHasWon, setHasLost }) {
                     if(i === currGuessIndex) {
                         let newGuess = prevGuess.map((prevChar, j) => {
                             if(prevChar.val === wordArr[j]) {
+                                // If the character is in the proper place...
+                                // Color the square green
                                 return {...prevChar, isProper: 'proper'};
                             } else if (prevChar.val !== wordArr[j] && wordArr.includes(prevChar.val)) {
+                                // If the character is in the word but not in the proper place...                                
+                                // Color the square yellow
                                 return {...prevChar, isCorrect: 'correct'};
                             } else {
                                 return prevChar;
@@ -84,7 +163,7 @@ function Board({ possibleWords, word, hasWon, setHasWon, setHasLost }) {
                     if(i === currGuessIndex) {
                         let newGuess = prevGuess.map((prevChar, j) => {
                             if(j === currCharIndex) {
-                                // Return the new value and remove active
+                                // Return the new value and remove active CSS class
                                 return {val: event.key, active: '', isCorrect: '', isProper: ''};
                             } else if (j === currCharIndex + 1) {
                                 return {val: '', active: 'active', isCorrect: '', isProper: ''}
@@ -156,15 +235,23 @@ function Board({ possibleWords, word, hasWon, setHasWon, setHasLost }) {
                 return;
             }
 
+            // Check if user has already won or lost
+            if(hasWon || hasLost) {
+                restartGame();
+                return;
+            }
+
             // Validate the current guess
             if(!validateGuess()) {
                 return;
             }
 
             // Commit the guess
-            if(commitGuess() || hasWon) {
+            if(commitGuess()) {
                 return;
             }
+
+            setSubmitted(prev => !prev);
 
             // Move the active CSS class to the next row
             setGuesses((prevGuesses) => {
@@ -191,7 +278,6 @@ function Board({ possibleWords, word, hasWon, setHasWon, setHasLost }) {
             setCurrCharIndex(0);
             setCurrGuessIndex(prevGuessIndex => {
                 if(prevGuessIndex > 4) {
-                    setHasLost(true);
                     return 6;
                 } else {
                     return prevGuessIndex += 1;
@@ -209,9 +295,16 @@ function Board({ possibleWords, word, hasWon, setHasWon, setHasLost }) {
             window.removeEventListener('keyup', handleEnterPress);
         }
 
-    },[guesses, currCharIndex, currGuessIndex, setHasLost, possibleWords, hasWon, setHasWon, word]);
-                                          
-    
+    },[guesses, currCharIndex, currGuessIndex, setHasLost, possibleWords, hasWon, setHasWon, word, setLossCount, setWinCount, setRestart, setSeenLetters, hasLost]);
+                                      
+    // Watch for currGuessIndex changes. If it goes over 5, set hasLost to true.
+    useEffect(() => {
+        if(currGuessIndex >= 6) {
+            setHasLost(true);
+        }
+    }, [currGuessIndex, setHasLost]);
+
+
     return (
         <div className="Board">
             <div className="row">

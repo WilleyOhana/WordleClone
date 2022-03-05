@@ -12,3 +12,20 @@
   align-items: center;
   justify-content: center;
 }
+
+.App .counter {
+  color: white;
+  font-size: 25px;
+}
+
+.App .won, .App .lost {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  background-color: rgba(0,0,0,0.8);
+  color: white;
+  font-size: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

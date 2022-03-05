@@ -1,0 +1,39 @@
+.Keyboard {
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.Keyboard .row {
+    display: flex;
+    justify-content: center;
+}
+
+.Keyboard .key {
+    margin: 1.5px;
+    background-color: lightgray;
+    padding: 8px 7px;
+    border: 2px solid black;
+    border-radius: 4px;
+    text-transform: capitalize;
+    font-size: 18px;
+    font-family: monospace;
+    cursor: pointer;
+}
+
+.Keyboard .key:hover {
+    opacity: 0.9;
+}
+
+.Keyboard .key.incorrect {
+    background-color: gray;
+}
+
+.Keyboard .key.proper {
+    background-color: green !important;
+}
+
+.Keyboard .key.correct {
+    background-color: yellow;
+}
