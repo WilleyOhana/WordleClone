@@ -30,9 +30,9 @@
 }
 
 .Board .row .char.proper {
-    background-color: green;
+    background-color: rgb(73, 138, 73);
 }
 
 .Board .row .char.correct {
-    background-color: yellow;
+    background-color: rgb(196, 196, 96);
 }

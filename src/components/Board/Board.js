@@ -12,6 +12,14 @@ function Board({ possibleWords, word, hasWon, setHasWon, hasLost, setHasLost, se
                                             [{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active: '', isCorrect: '', isProper: ''},{val: '', active:''}]
                                         ]);
     const [submitted, setSubmitted] = useState(true);
+    const [alert, setAlert] = useState('');
+
+    // useEffect to watch for alert changes
+    useEffect(() => {
+        setTimeout(() => {
+            setAlert('');
+        }, 3000)
+    }, [alert]);
     
     // useEffect to watch for updates to guesses state and update seenLetters in App.js
     useEffect(() => {
@@ -98,10 +106,10 @@ function Board({ possibleWords, word, hasWon, setHasWon, hasLost, setHasLost, se
             const currGuess = guesses[currGuessIndex].map(char => char.val).join('');
 
             if (currCharIndex < 5) {
-                alert('Word is too short');
+                setAlert('Word is too short');
                 return false;
             } else if (!possibleWords.includes(currGuess)) {
-                alert('Not a valid word');
+                setAlert('Not a valid word');
                 return false;
             }
 
@@ -349,6 +357,13 @@ function Board({ possibleWords, word, hasWon, setHasWon, hasLost, setHasLost, se
                 <div className={`char ${guesses[5][3]['active']} ${guesses[5][3]['isCorrect']} ${guesses[5][3]['isProper']}`}>{guesses[5][3]['val']}</div>
                 <div className={`char ${guesses[5][4]['active']} ${guesses[5][4]['isCorrect']} ${guesses[5][4]['isProper']}`}>{guesses[5][4]['val']}</div>
             </div>
+            { alert === "" ?
+                null
+            :
+                <div className="alert">
+                    {alert}
+                </div>
+            }
         </div>
     )
 }

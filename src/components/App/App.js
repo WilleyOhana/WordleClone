@@ -1,12 +1,28 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Board from '../Board/Board';
 import Keyboard from '../Keyboard/Keyboard';
+import ReactCanvasConfetti from 'react-canvas-confetti';
 import './App.css';
 
+const canvasStyles = {
+  position: "fixed",
+  pointerEvents: "none",
+  width: "100%",
+  height: "100%",
+  top: 0,
+  left: 0
+};
+
 function App() {
-  const [winCount, setWinCount] = useState(0);
-  const [lossCount, setLossCount] = useState(0);
+  const [winCount, setWinCount] = useState(() => {
+    const wins = localStorage.getItem('wins');
+    return wins ? parseInt(wins) : 0;
+  });
+  const [lossCount, setLossCount] = useState(() => {
+    const losses = localStorage.getItem('losses');
+    return losses ? parseInt(losses) : 0;
+  });
   const [hasWon, setHasWon] = useState(false);
   const [hasLost, setHasLost] = useState(false);
   const [word, setWord] = useState('guess');
@@ -41,6 +57,16 @@ function App() {
     m: { correct: '', proper: '', incorrect: '' }
   })
   const [restart, setRestart] = useState(true);
+
+  // Report wins to localStorage
+  useEffect(() => {
+    localStorage.setItem('wins', winCount);
+  }, [winCount]);
+
+  // Report losses to localStorage
+  useEffect(() => {
+    localStorage.setItem('losses', lossCount);
+  }, [lossCount]);
 
   // Get possible words and save in possibleWords state variable
   useEffect(() => {
@@ -85,14 +111,25 @@ function App() {
         seenLetters={seenLetters}
       />
 
-      { hasWon ? 
-          <div className="won">You've won! Refresh to play another!</div>
+      { hasWon ?
+          <>
+            <div className="won">
+              <p>You won!</p>
+              <p className="tag">Press Enter to play another!</p>
+              
+            </div>
+            <ReactCanvasConfetti style={canvasStyles} />
+          </>
         :
           null
       }
 
       { hasLost ? 
-          <div className="lost">You've lost! Refresh to play another!</div>
+          <div className="lost">
+            <p>You lost!</p>
+            <p className="tag">The word was {word.toUpperCase()}</p>
+            <p className="tag">Press Enter to play another!</p>
+          </div>
         :
           null
       }
