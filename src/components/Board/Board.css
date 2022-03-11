@@ -36,3 +36,23 @@
 .Board .row .char.correct {
     background-color: rgb(196, 196, 96);
 }
+
+.Board .alert {
+    position: fixed;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    background: rgba(182, 0, 0, 0.9);
+    font-family: sans-serif;
+    padding: 20px 30px;
+    border-radius: 5px;
+    font-size: 20px;
+    animation: 0.3s fly-down;
+}
+
+@keyframes fly-down {
+    0% {
+        top: -200px;
+    }
+}
