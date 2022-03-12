@@ -70,7 +70,7 @@ const Keyboard = ({ seenLetters }) => {
                         )
                     })
                 }
-                <div className="key" onClick={() => handleLetterClick('Backspace')}>Backspace</div>
+                <div className="key" onClick={() => handleLetterClick('Backspace')}>Delete</div>
             </div>
         </div>
     )

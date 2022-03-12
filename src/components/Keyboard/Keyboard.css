@@ -37,3 +37,17 @@
 .Keyboard .key.correct {
     background-color: rgb(196, 196, 96);
 }
+
+@media screen and (max-width: 420px) {
+    .Keyboard .key {
+        font-size: 14px;
+    }
+}
+
+@media screen and (max-width: 350px) {
+    .Keyboard .key {
+        font-size: 14px;
+        padding: 7px 6px;
+        margin: 1px;
+    }
+}
